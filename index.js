@@ -17,6 +17,7 @@ function MQReadable(mq, topic, opts) {
 
   opts = opts || {}
   opts.objectMode = true
+  opts.highWaterMark = opts.highWaterMark || 16
 
   streams.Transform.call(this, opts)
 
