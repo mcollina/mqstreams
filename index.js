@@ -10,6 +10,10 @@ function mqstreams(mq) {
     return new MQReadable(this, topic, opts)
   }
 
+  mq.writable = function(opts) {
+    return new MQWritable(this, opts)
+  }
+
   return mq
 }
 
@@ -28,5 +32,23 @@ function MQReadable(mq, topic, opts) {
 }
 
 util.inherits(MQReadable, streams.PassThrough)
+
+function MQWritable(mq, topic, opts) {
+
+  opts = opts || {}
+  opts.objectMode = true
+  opts.highWaterMark = opts.highWaterMark || 16
+
+  streams.Writable.call(this, opts)
+
+  this.mq = mq
+}
+
+util.inherits(MQWritable, streams.Writable)
+
+MQWritable.prototype._write = function(data, encoding, cb) {
+  console.log('aaa')
+  this.mq.emit(data, cb)
+}
 
 module.exports = mqstreams
