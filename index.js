@@ -62,7 +62,6 @@ MQReadable.prototype.pipe = function(destination, options) {
 }
 
 function MQWritable(mq, topic, opts) {
-
   opts = opts || {}
   opts.objectMode = true
   opts.highWaterMark = opts.highWaterMark || 16

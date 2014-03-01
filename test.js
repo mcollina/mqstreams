@@ -131,7 +131,6 @@ test('supports writable', function(t) {
       }
     , stream = e.writable()
 
-
   e.on('hello world', function(message, cb) {
     cb()
     t.equal(message, expected)
