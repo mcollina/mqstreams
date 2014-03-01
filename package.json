@@ -31,7 +31,7 @@
     "writable"
   ],
   "devDependencies": {
-    "mqemitter": "~0.1.2",
+    "mqemitter": "~0.2.0",
     "tap": "~0.4.8",
     "pre-commit": "0.0.4",
     "through2": "~0.4.1"
@@ -40,6 +40,6 @@
     "readable-stream": "~1.0.26"
   },
   "peerDependencies": {
-    "mqemitter": "~0.1.1"
+    "mqemitter": "~0.2.0"
   }
 }
