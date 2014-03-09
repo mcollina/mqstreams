@@ -1,6 +1,6 @@
 {
   "name": "mqstreams",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "MQ pub/sub as streams - based on mqemitter",
   "main": "index.js",
   "scripts": {
