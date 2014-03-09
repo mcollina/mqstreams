@@ -58,7 +58,7 @@ MQReadable.prototype.pipe = function(destination, options) {
   destination.on('finish', closeAnyway)
   destination.on('error', closeAnyway)
 
-  streams.Transform.prototype.pipe.call(this, destination, options)
+  return streams.Transform.prototype.pipe.call(this, destination, options)
 }
 
 function MQWritable(mq, topic, opts) {

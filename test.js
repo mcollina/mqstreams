@@ -111,7 +111,8 @@ test('close a readable stream when downstream errors', function(t) {
 
   writable._write = function(a, b, cb) { cb() }
 
-  stream.pipe(writable)
+  t.equal(stream.pipe(writable), writable);
+
   e.emit(expected, function() {
     writable.emit('error', new Error('fake error'))
   })
