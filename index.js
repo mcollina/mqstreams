@@ -44,8 +44,12 @@ util.inherits(MQReadable, streams.PassThrough)
 MQReadable.prototype.subscribe = function(topic) {
   assert(topic)
 
-  this.mq.on(topic, this._callback)
-  this._topics.push(topic)
+  if (typeof topic === 'string') {
+    this.mq.on(topic, this._callback)
+    this._topics.push(topic)
+  } else {
+    topic.forEach(this.subscribe.bind(this))
+  }
 
   return this
 }
@@ -53,8 +57,13 @@ MQReadable.prototype.subscribe = function(topic) {
 MQReadable.prototype.unsubscribe = function(topic) {
   assert(topic)
 
-  this.mq.removeListener(topic, this._callback)
-  this._topics.filter(function(t) { return t !== topic })
+  if (typeof topic === 'string') {
+    this.mq.removeListener(topic, this._callback)
+    this._topics.filter(function(t) { return t !== topic })
+  } else {
+    topic.forEach(this.unsubscribe.bind(this))
+  }
+
   return this
 }
 

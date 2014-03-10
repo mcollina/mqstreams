@@ -228,3 +228,46 @@ test('close a readable stream with multiple subscriptions', function(t) {
 
   stream.close()
 })
+
+test('subscribe to multiple topics', function(t) {
+  t.plan(2)
+
+  var e = mqstreams(mq())
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+    , stream = e.readable()
+
+  stream.subscribe(['hello world', 'matteo'])
+
+  e.emit(expected)
+  e.emit({ topic: 'matteo' })
+
+  stream.on('data', function(message) {
+    t.ok(message, 'receive a message')
+  })
+})
+
+test('unsubscribe from multiple topics', function(t) {
+  t.plan(1)
+
+  var e = mqstreams(mq())
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+    , stream = e.readable()
+
+  stream.subscribe('hello world')
+  stream.subscribe('hello matteo')
+  stream.unsubscribe(['hello world', 'hello matteo'])
+  stream.subscribe('matteo')
+
+  e.emit(expected)
+  e.emit({ topic: 'matteo' })
+
+  stream.on('data', function(message) {
+    t.ok(message, 'receive a message')
+  })
+})
