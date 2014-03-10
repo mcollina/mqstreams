@@ -19,6 +19,10 @@ function mqstreams(mq) {
 }
 
 function MQReadable(mq, topic, opts) {
+  if (typeof topic === 'object') {
+    opts = topic
+    topic = null
+  }
 
   opts = opts || {}
   opts.objectMode = true

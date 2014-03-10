@@ -271,3 +271,22 @@ test('unsubscribe from multiple topics', function(t) {
     t.ok(message, 'receive a message')
   })
 })
+
+test('supports options passed to readable', function(t) {
+  t.plan(1)
+
+  var e = mqstreams(mq())
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+    , stream = e.readable({ highWaterMark: 2 })
+
+  stream.subscribe('hello world')
+
+  e.emit(expected)
+
+  stream.on('data', function(message) {
+    t.ok(message, 'receive a message')
+  })
+})
