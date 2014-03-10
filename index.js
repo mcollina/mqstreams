@@ -1,6 +1,7 @@
 
 var streams = require('readable-stream')
   , util = require('util')
+  , assert = require('assert')
 
 function mqstreams(mq) {
   // prototype chain all the things!
@@ -23,9 +24,9 @@ function MQReadable(mq, topic, opts) {
   opts.objectMode = true
   opts.highWaterMark = opts.highWaterMark || 16
 
-  streams.Transform.call(this, opts)
+  streams.PassThrough.call(this, opts)
 
-  this.topic = topic;
+  this._topics = [];
   this.mq = mq
 
   var that = this;
@@ -33,18 +34,43 @@ function MQReadable(mq, topic, opts) {
     that.write(message, cb)
   }
 
-  mq.on(topic, this._callback)
+  if (topic) {
+    this.subscribe(topic)
+  }
 }
 
 util.inherits(MQReadable, streams.PassThrough)
+
+MQReadable.prototype.subscribe = function(topic) {
+  assert(topic)
+
+  this.mq.on(topic, this._callback)
+  this._topics.push(topic)
+
+  return this
+}
+
+MQReadable.prototype.unsubscribe = function(topic) {
+  assert(topic)
+
+  this.mq.removeListener(topic, this._callback)
+  this._topics.filter(function(t) { return t !== topic })
+  return this
+}
 
 MQReadable.prototype.close = function() {
   this.end()
 }
 
 MQReadable.prototype._flush = function(callback) {
-  this.mq.removeListener(this.topic, this._callback)
+  var that = this
+
+  this._topics.forEach(function(topic) {
+    that.unsubscribe(topic)
+  })
+
   callback()
+
   this.emit('close')
 }
 

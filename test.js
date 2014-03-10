@@ -158,3 +158,73 @@ test('avoid overflow in writable', function(t) {
     t.end()
   })
 })
+
+test('multi-subscription readable', function(t) {
+  t.plan(2)
+
+  var e = mqstreams(mq())
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+    , stream = e.readable()
+
+  stream.subscribe('hello world')
+  stream.subscribe('matteo')
+
+  e.emit(expected)
+  e.emit({ topic: 'matteo' })
+
+  stream.on('data', function(message) {
+    t.ok(message, 'receive a message')
+  })
+})
+
+test('readable#unsubscribe', function(t) {
+  t.plan(1)
+
+  var e = mqstreams(mq())
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+    , stream = e.readable()
+
+  stream.subscribe('hello world')
+  stream.unsubscribe('hello world')
+  stream.subscribe('matteo')
+
+  e.emit(expected)
+  e.emit({ topic: 'matteo' })
+
+  stream.on('data', function(message) {
+    t.ok(message, 'receive a message')
+  })
+})
+
+test('close a readable stream with multiple subscriptions', function(t) {
+  var e = mqstreams(mq())
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+    , stream = e.readable()
+
+  e.emit(expected)
+
+  stream.subscribe('hello world')
+  stream.subscribe('hello matteo')
+
+  stream.on('close', function() {
+    t.ok(true, 'should emit close')
+
+    stream.on('data', function(message) {
+      t.nok(message, 'should not emit any data event')
+    })
+
+    e.emit(expected)
+    t.end()
+  })
+
+  stream.close()
+})
