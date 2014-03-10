@@ -64,7 +64,7 @@ Extends the MQEmitter with the `readable()` and `writable()` methods.
 
 -------------------------------------------------------
 <a name="readable"></a>
-### emitter.readable(topic, [opts])
+### emitter.readable([topic], [opts])
 
 Return
 a [`Readable`](http://nodejs.org/api/stream.html#stream_class_stream_readable)
@@ -74,6 +74,24 @@ constructor. This stream fully respect the Stream2 interface.
 
 The `topic` parameter is passed to the
 [`emitter.on`](https://github.com/mcollina/mqemitter#on) method.
+
+the returned object has the following method added:
+`subscribe()`, `unsubscribe()`, `close()`.
+
+<a name="readable-subscribe"></a>
+#### emitter.readable#subscribe(topic)
+
+Subscribe to the given topic, which can also be an array of topics.
+
+<a name="readable-unsubscribe"></a>
+#### emitter.readable#unsubscribe(topic)
+
+Unsubscribe from the given topic, which can also be an array of topics.
+
+<a name="readable-close"></a>
+#### emitter.readable#close()
+
+Close the stream, unsubscribing from all the topics.
 
 -------------------------------------------------------
 <a name="writable"></a>
