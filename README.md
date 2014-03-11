@@ -6,6 +6,7 @@ Publish-Subscribe node streams style, based on
 
   * <a href="#install">Installation</a>
   * <a href="#basic">Basic Example</a>
+  * <a href="#performance">Performance</a>
   * <a href="#api">API</a>
   * <a href="#licence">Licence &amp; copyright</a>
 
@@ -48,7 +49,20 @@ output.on('data', function(msg) {
   // { topic: 'output/some/startup', type: 'instasomething' }
   // { topic: 'output/some/dev', type: 'matteo' }
 })
+
+emitter.readable('some/+')
+       .on('data', function(msg) {
+          // this is another tap on the stream of data
+       })
 ```
+
+## Performance
+
+Early experiments on my Macbook Air 2011 shows that this library is
+roughly twice as slow as just piping streams, so it can move __1 million
+messages in 20s__, while the PassThrough streams only takes 13s.
+So, it slower, but you can send messages to multiple stream at the same
+time. Not bad, eh?
 
 ## API
 
