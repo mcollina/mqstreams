@@ -37,7 +37,8 @@
     "through2": "^2.0.0"
   },
   "dependencies": {
-    "mqemitter": "^2.0.0"
+    "mqemitter": "^2.0.0",
+    "readable-stream": "^2.1.2"
   },
   "peerDependencies": {
     "mqemitter": "^2.0.0"
