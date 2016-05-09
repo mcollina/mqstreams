@@ -55,6 +55,39 @@ test('close a readable stream', function (t) {
   })
 })
 
+test('destroy a readable stream', function (t) {
+  t.plan(3)
+
+  var e = mqstreams(mq())
+  var expected = {
+    topic: 'hello world',
+    payload: { my: 'message' }
+  }
+  var stream = e.readable('hello world')
+
+  e.emit(expected)
+
+  stream.on('end', function () {
+    t.ok(true, 'should emit end')
+  })
+
+  stream.on('close', function () {
+    t.ok(true, 'should emit close')
+  })
+
+  stream.once('data', function (message) {
+    stream.destroy()
+
+    stream.on('data', function () {
+      t.ok(false, 'should not emit again')
+    })
+
+    e.emit(expected, function () {
+      t.ok(true, 'should call the callback')
+    })
+  })
+})
+
 test('supports writable', function (t) {
   t.plan(1)
 

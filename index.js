@@ -73,9 +73,11 @@ MQReadable.prototype.unsubscribe = function (topic) {
   return this
 }
 
-MQReadable.prototype.close = function () {
+MQReadable.prototype.destroy = function () {
   this.end()
 }
+
+MQReadable.prototype.close = MQReadable.prototype.destroy
 
 MQReadable.prototype._flush = function (callback) {
   var that = this
